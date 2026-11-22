@@ -22,7 +22,7 @@
 :root{
   --bg:#141b16; --bg-2:#1b241e; --line:#2b3730; --fg:#ece3d6; --muted:#a29f91;
   --accent:#e06a4f; --on-accent:#141b16; --lamp:#f4b860; --sage:#93a081;
-  --lamp-a:.16; --dim:.66; --bulb:#3d4a41; --lamp-on:.14; --hole:#3b443e; --lamp-s:.62;
+  --lamp-a:.16; --dim:.66; --bulb:#f4b860; --lamp-on:1; --hole:#f6bd62; --lamp-s:.62;
   --display:"Unbounded","Arial Black",system-ui,sans-serif;
   --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
   --serif:"Cormorant","Georgia","Times New Roman",serif;
@@ -33,13 +33,13 @@
   :root:not([data-theme="dark"]){
     --bg:#e7dfd5; --bg-2:#ddd3c6; --line:#cdbfae; --fg:#3a1c15; --muted:#7c665a;
     --accent:#8e2618; --on-accent:#f3ece3; --lamp:#f0a540; --sage:#6c7a5f;
-    --lamp-a:.10; --dim:1; --bulb:#f0a540; --lamp-on:1; --hole:#f6bd62; color-scheme:light;
+    --lamp-a:.10; --dim:1; --bulb:#c9bcab; --lamp-on:.06; --hole:#4a443d; color-scheme:light;
   }
 }
 :root[data-theme="light"]{
   --bg:#e7dfd5; --bg-2:#ddd3c6; --line:#cdbfae; --fg:#3a1c15; --muted:#7c665a;
   --accent:#8e2618; --on-accent:#f3ece3; --lamp:#f0a540; --sage:#6c7a5f;
-  --lamp-a:.10; --dim:1; --bulb:#f0a540; --lamp-on:1; --hole:#f6bd62; color-scheme:light;
+  --lamp-a:.10; --dim:1; --bulb:#c9bcab; --lamp-on:.06; --hole:#4a443d; color-scheme:light;
 }
 
 *{box-sizing:border-box}
@@ -438,7 +438,7 @@ footer nav a:hover{color:var(--fg)}
   </div></div>
   <svg class="pc-rope" aria-hidden="true"><path/></svg>
   <i class="pc-bead" aria-hidden="true"></i>
-  <span class="pc-hint" id="pcHint" aria-hidden="true"><span class="pc-pill"><span class="pc-sign" id="pcSign"></span><span class="pc-tx"><b>потяните</b><span id="pcHintTx"> — включится день</span></span></span><svg class="pc-arrow" viewBox="0 0 26 18"><path d="M2 4 C 9 15, 16 15, 23 9"/><path d="M17 7.5 L23.5 8.6 L21 14.5"/></svg></span>
+  <span class="pc-hint" id="pcHint" aria-hidden="true"><span class="pc-pill"><span class="pc-sign" id="pcSign"></span><span class="pc-tx"><b>потяните</b><span id="pcHintTx"> — наступит день</span></span></span><svg class="pc-arrow" viewBox="0 0 26 18"><path d="M2 4 C 9 15, 16 15, 23 9"/><path d="M17 7.5 L23.5 8.6 L21 14.5"/></svg></span>
   <button class="pc-grab" id="pcGrab" type="button" role="switch" aria-checked="false" aria-label="Дневной свет" title="Потяните за шнурок: вечер или день"></button>
 </div>
 
@@ -1084,9 +1084,9 @@ const IMG = {
   const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>', MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>';
   const syncAria = () => {
     grab.setAttribute('aria-checked', String(on));
-    grab.setAttribute('aria-label', on ? 'Дневной свет включён. Потяните, чтобы вернуть вечер' : 'Вечерний свет. Потяните, чтобы включить день');
+    grab.setAttribute('aria-label', on ? 'День, лампа выключена. Потяните, чтобы зажечь лампу и вернуть вечер' : 'Вечер, лампа горит. Потяните, чтобы погасить лампу и включить день');
     sign.innerHTML = on ? MOON : SUN;                      // the sign shows what a pull will turn on
-    hintTx.textContent = on ? ' — вернётся вечер' : ' — включится день';
+    hintTx.textContent = on ? ' — зажжётся лампа' : ' — наступит день';
   };
   syncAria();
 
@@ -1126,7 +1126,7 @@ const IMG = {
   }
   function flip() {
     on = !on; syncAria();
-    BP.x = on ? 1.35 : .8; TUG.v += 150;
+    BP.x = on ? .8 : 1.35; TUG.v += 150;   // on = day: the lamp goes out
     setTheme(on);
     if (!hintSeen) { hintSeen = true; try { localStorage.setItem('into-cord', '1'); } catch (e) {} }
   }
